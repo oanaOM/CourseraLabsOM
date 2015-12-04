@@ -1,0 +1,3 @@
+b)a. ActivityOne: onCreate()->onStart()->onResume()->onPause()->OnStop ->ActivityTwo->onCreate()->onResume()
+c)a. ActivityTwo: onStop()-> ActivityOne -> onRestart() -> onStart() -> onResume()
+d)a. ActivityOne: onCreate()->onStart()->onResume()->onPause()->OnStop ->ActivityTwo->onCreate()->onResume()->onPause()
