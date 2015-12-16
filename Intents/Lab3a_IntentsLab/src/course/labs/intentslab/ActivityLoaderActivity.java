@@ -67,10 +67,13 @@ public class ActivityLoaderActivity extends Activity {
 		
 		// TODO - Create a new intent to launch the ExplicitlyLoadedActivity class
 		Intent explicitIntent = null;
-		explicitIntent = new Intent(this,ExplicitlyLoadedActivity.class);
+		explicitIntent = new Intent(getApplicationContext(), ExplicitlyLoadedActivity.class);
 		
 		// TODO - Start an Activity using that intent and the request code defined above
-		onActivityResult(GET_TEXT_REQUEST_CODE,RESULT_OK,explicitIntent);
+		explicitIntent.putExtra("mKey",mUserTextView.getText().toString());
+		startActivityForResult(explicitIntent, GET_TEXT_REQUEST_CODE);
+		Log.i("ActivityLoaderAc: ","GET_TEXT_REQUEST_CODE: " + GET_TEXT_REQUEST_CODE + "RESULT_OK: "+RESULT_OK);
+
         
 	}
     
@@ -83,17 +86,18 @@ public class ActivityLoaderActivity extends Activity {
 		// TODO - Create a base intent for viewing a URL
 		// (HINT:  second parameter uses Uri.parse())
 		Intent baseIntent = null;
-		baseIntent.putExtra((Intent.ACTION_VIEW), Uri.parse(URL));
+		baseIntent = new Intent();
+		baseIntent.setAction(Intent.ACTION_VIEW);
+		baseIntent.setData(Uri.parse(URL));
 		
 		// TODO - Create a chooser intent, for choosing which Activity
 		// will carry out the baseIntent
 		// (HINT: Use the Intent class' createChooser() method)
 		Intent chooserIntent = null;
-        chooserIntent.createChooser(baseIntent,CHOOSER_TEXT);
+		chooserIntent = Intent.createChooser(baseIntent,CHOOSER_TEXT);
         
 		Log.i(TAG,"Chooser Intent Action:" + chooserIntent.getAction());
-        
-        
+
 		// TODO - Start the chooser Activity, using the chooser intent
 		startActivity(chooserIntent);
 
@@ -102,14 +106,19 @@ public class ActivityLoaderActivity extends Activity {
     
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        
-		Log.i(TAG, "Entered onActivityResult()");
+        super.onActivityResult(requestCode,resultCode,data);
+		Log.i(TAG, "Entered onActivityResult()" + "request Code: "+resultCode);
 		
 		// TODO - Process the result only if this method received both a
 		// RESULT_OK result code and a recognized request code
 		// If so, update the Textview showing the user-entered text.
-		if (resultCode >=0){
-			startActivity(data);
+		Bundle extras = data.getExtras();
+
+		if(requestCode == 1) {
+			if (resultCode == RESULT_OK) {
+				mUserTextView.setText(extras!=null ? extras.getString("returnKey") : "nothing returned");
+				Log.i("onActivityResult", "mUserTextView:" + mUserTextView.toString());
+			}
 		}
 
     }
