@@ -53,7 +53,6 @@ public class ExplicitlyLoadedActivity extends Activity {
 		// TODO - Create a new intent and save the input from the EditText field as an extra
 		Intent input = null;
 		input = new Intent();
-		Log.i("ExplicitlyLoadedAcy: ", mEditText+"sd"+ RESULT_OK);
 
 		input.putExtra("returnKey",  mEditText.getText().toString());
 

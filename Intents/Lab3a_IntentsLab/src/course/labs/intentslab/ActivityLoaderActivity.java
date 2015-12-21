@@ -67,14 +67,11 @@ public class ActivityLoaderActivity extends Activity {
 		
 		// TODO - Create a new intent to launch the ExplicitlyLoadedActivity class
 		Intent explicitIntent = null;
-		explicitIntent = new Intent(getApplicationContext(), ExplicitlyLoadedActivity.class);
+		explicitIntent = new Intent(ActivityLoaderActivity.this, ExplicitlyLoadedActivity.class);
 		
 		// TODO - Start an Activity using that intent and the request code defined above
-		explicitIntent.putExtra("mKey",mUserTextView.getText().toString());
 		startActivityForResult(explicitIntent, GET_TEXT_REQUEST_CODE);
-		Log.i("ActivityLoaderAc: ","GET_TEXT_REQUEST_CODE: " + GET_TEXT_REQUEST_CODE + "RESULT_OK: "+RESULT_OK);
 
-        
 	}
     
 	// Start a Browser Activity to view a web page or its URL
@@ -85,23 +82,19 @@ public class ActivityLoaderActivity extends Activity {
         
 		// TODO - Create a base intent for viewing a URL
 		// (HINT:  second parameter uses Uri.parse())
-		Intent baseIntent = null;
-		baseIntent = new Intent();
-		baseIntent.setAction(Intent.ACTION_VIEW);
-		baseIntent.setData(Uri.parse(URL));
-		
+		Intent baseIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
+
 		// TODO - Create a chooser intent, for choosing which Activity
 		// will carry out the baseIntent
 		// (HINT: Use the Intent class' createChooser() method)
-		Intent chooserIntent = null;
-		chooserIntent = Intent.createChooser(baseIntent,CHOOSER_TEXT);
+		Intent chooserIntent = Intent.createChooser(baseIntent,CHOOSER_TEXT);
         
 		Log.i(TAG,"Chooser Intent Action:" + chooserIntent.getAction());
 
 		// TODO - Start the chooser Activity, using the chooser intent
-		startActivity(chooserIntent);
-
-        
+		if (chooserIntent.resolveActivity(getPackageManager()) != null) {
+			startActivity(chooserIntent);
+		}
 	}
     
 	@Override
@@ -114,12 +107,10 @@ public class ActivityLoaderActivity extends Activity {
 		// If so, update the Textview showing the user-entered text.
 		Bundle extras = data.getExtras();
 
-		if(requestCode == 1) {
 			if (resultCode == RESULT_OK) {
-				mUserTextView.setText(extras!=null ? extras.getString("returnKey") : "nothing returned");
-				Log.i("onActivityResult", "mUserTextView:" + mUserTextView.toString());
+				mUserTextView.setText(extras != null ? extras.getString("returnKey") : "nothing returned");
 			}
-		}
+
 
     }
 }
